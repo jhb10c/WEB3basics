@@ -2,4 +2,5 @@
 A repo that contains basic functions to interact with ethereum using Web3.py.
 
 1. SendEth.py contains a function that transfers eth. This has been tested on ganache-cli and kovan testnet. 
+2. The deployContract folders contains functions that deploys smart contracts to ethereum. This contains an example deployment of the greeter smart contract.
 
