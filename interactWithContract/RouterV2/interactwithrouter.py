@@ -21,7 +21,7 @@ from routerabi import IERC20, sushirouterabi, sabi
 ##
 ## Loading up Web3 interface
 ##
-server = 'https://kovan.infura.io/v3/6c3164d7cbf746b7ae8a1f1b0e448090'
+server = ''
 web3 = Web3(Web3.HTTPProvider(server))
 ###
 ###
@@ -31,8 +31,8 @@ web3 = Web3(Web3.HTTPProvider(server))
 ## Keys and Accounts
 ##
 
-maddress = web3.toChecksumAddress('0xCA090945dF18fFd93F342Cb1e8B61d3f71e044a7')
-privateKey ='0x105ff6aa24c8ca1a359c0237c35590afca1160252bb40db8af94594585d198ce'
+maddress = web3.toChecksumAddress('')
+privateKey =''
 ##
 
 
