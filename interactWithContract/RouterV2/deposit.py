@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Sep  4 22:51:49 2021
+Created on Thu Sep  9 21:03:56 2021
 
 @author: johnbergschneider
 """
@@ -22,7 +22,6 @@ web3 = Web3(Web3.HTTPProvider(server))
 ##
 ## Keys and Accounts
 ##
-
 maddress = web3.toChecksumAddress('')
 privateKey =''
 ##
@@ -52,6 +51,8 @@ def toCheckSum(path):
     for i in path:
         checked.append(web3.toChecksumAddress(i))
     return checked
+
+
 
 def approvePath(web3,ERC20,path,amounts,spender):
     '''
@@ -85,62 +86,38 @@ def approvePath(web3,ERC20,path,amounts,spender):
     return list_of_rec
 
 
-
-def getAmountOut(amountIn, path):   
+def addLiquidity(TokenA,TokenB,amountADesired,amountBDesired,
+                 amountAMin,amountBMin,to,deadline):
     '''
-    Per Uniswap docs:
-        Given an input asset amount and an array of token addresses, 
-        calculates all subsequent maximum output token amounts by calling 
-        getReserves for each pair of token addresses in the path in turn,
-        and using these to call getAmountOut.
-        
+    Adds liquidity to pair contract. Router needs approval to transfer tokens
+
+    Parameters
     ----------
-    amountIn : amount of tokens input
-    path: path of tokens 
+    TokenA: address of first token
+    TokenB: address of second token
+    amountADesired: amount of token A desired to add
+    amountBdesired: amount of token B desired to add           
+    amountAMin: min amount of token A to add
+    amountBMin: min amount of token b to add
+    to: address to send LP tokens
+    deadline: unix timestamp to complete transaction by 
+        
 
     Returns
     -------
-    Returns the amount tokens for each trade in path
+    Returns reciept of the contract
     '''
     
-    return router.functions.getAmountsIn(amountIn,path).call()
-
-
-def getAmountIn(amountOut, path):   
-    '''
-    Per Uniswap docs:
-        Given an output asset amount and an array of token addresses, 
-        calculates all preceding minimum input token amounts by calling 
-        getReserves for each pair of token addresses in the path in turn, 
-        and using these to call getAmountIn.
-        
-    ----------
-    amountOut : amount of tokens output of a trade
-    path: path of tokens 
-
-    Returns
-    -------
-    Returns the amount tokens for each trade in path
-    '''
     
-    return router.functions.getAmountsOut(amountOut,path).call()
-
-def slippage(amountIn,path,percent):
-    hold = getAmountOut(amountIn,path)
-    return int(hold[-1]*percent+hold[-1])
-    
-
-def swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline):
-
-    approvePath(web3,IERC20,[web3.toChecksumAddress(path[0])],[amountIn],routerv2)
-    rece = router.encodeABI(fn_name='swapExactTokensForTokens',args=[amountIn,amountOutMin,path,to,deadline])
+    rece = router.encodeABI(fn_name='addLiquidity',args=[TokenA,TokenB,amountADesired,
+                                                         amountBDesired,amountAMin,amountBMin,to,deadline])
     tx = {'from':maddress,
-      'nonce':web3.eth.getTransactionCount(maddress),
-      'data':rece,
-      'to':routerv2,
-      'gas':2100000,
-      'gasPrice':web3.toWei(79,'gwei')
-      }
+          'nonce':web3.eth.getTransactionCount(maddress),
+          'data':rece,
+          'to':routerv2,
+          'gas':2100000,
+          'gasPrice':web3.toWei(79,'gwei')
+          }
     return functiontransaction(web3,privateKey,tx)
 
 
@@ -155,6 +132,9 @@ router=contractInstance(web3,sushirouterabi,routerv2)
 
 
 
-#swapExactTokensForTokens(11,5,Path,maddress,1636232904)
+newpath=["0xCFe07be90FdaA2eDc7958DE91765e9df4F72EB45","0x3dFC0BF8C997A0F19Bdf98251cF9aC49ed60bB1F"]
+newnew = [web3.toChecksumAddress("0xCFe07be90FdaA2eDc7958DE91765e9df4F72EB45"),web3.toChecksumAddress("0x3dFC0BF8C997A0F19Bdf98251cF9aC49ed60bB1F")]
 
+#approvePath(web3,IERC20,newnew,[100,100],routerv2)
+#addLiquidity(newnew[0],newnew[1],2,2,1,1,maddress,1636232904)
 
